@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroEcho - AI-Powered Mental Wellness</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #4285F4;
+            --secondary: #34A853;
+            --accent: #EA4335;
+            --light: #F8F9FA;
+            --dark: #202124;
+            --gray: #5F6368;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .logo-icon {
+            color: var(--primary);
+            font-size: 28px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--gray);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav a:hover {
+            color: var(--primary);
+        }
+        
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 12px;
+            margin: 40px 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        .hero h1 {
+            font-size: 42px;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+        
+        .hero p {
+            font-size: 18px;
+            color: var(--gray);
+            max-width: 800px;
+            margin-bottom: 30px;
+        }
+        
+        .btn {
+            padding: 12px 28px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            background: #3367D6;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(66, 133, 244, 0.3);
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            font-size: 40px;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        .feature-card p {
+            color: var(--gray);
+        }
+        
+        .demo-section {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            margin: 50px 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        .demo-section h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--dark);
+        }
+        
+        .demo-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .demo-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .demo-card {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .demo-card h3 {
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+        
+        .webcam-container {
+            width: 100%;
+            height: 240px;
+            background: #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        #video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .emotion-result {
+            padding: 10px;
+            background: #eee;
+            border-radius: 8px;
+            margin-top: 15px;
+            min-height: 50px;
+        }
+        
+        .voice-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .voice-btn {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            border: none;
+            font-size: 24px;
+            transition: all 0.3s;
+        }
+        
+        .voice-btn:hover {
+            background: #3367D6;
+            transform: scale(1.05);
+        }
+        
+        .voice-btn.listening {
+            background: var(--accent);
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .game-container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 40px 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+        
+        .game-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .scenario {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-style: italic;
+        }
+        
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin: 25px 0;
+        }
+        
+        .option-btn {
+            padding: 12px 20px;
+            background: #eee;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .option-btn:hover {
+            background: #ddd;
+        }
+        
+        .selected {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .positive {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .progress-container {
+            margin: 40px 0;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background: #eee;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        
+        .progress {
+            height: 100%;
+            background: var(--secondary);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+            margin-top: 60px;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .footer-logo {
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+        
+        .copyright {
+            color: #999;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container nav-container">
+            <div class="logo">
+                <i class="fas fa-brain logo-icon"></i>
+                <div class="logo-text">NeuroEcho</div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#demo">Demo</a></li>
+                    <li><a href="#about">About</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="hero">
+            <h1>Real-time Cognitive Training with Generative AI</h1>
+            <p>NeuroEcho uses AI to detect subconscious patterns and provides interactive exercises to rewire negative thought loops into healthy responses.</p>
+            <button class="btn">Get Started</button>
+        </section>
+
+        <section id="features" class="features">
+            <div class="feature-card">
+                <i class="fas fa-microchip feature-icon"></i>
+                <h3>Subconscious Pattern Capture</h3>
+                <p>Detects micro-expressions, eye movements, typing rhythm, tone, and physiological signals to identify hidden thought patterns.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-robot feature-icon"></i>
+                <h3>Generative AI Cognitive Training</h3>
+                <p>Creates personalized "mirror scenarios" that reflect your hidden thought loops and biases for effective cognitive reframing.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-gamepad feature-icon"></i>
+                <h3>Gamified Micro-interactions</h3>
+                <p>Engaging mental exercises designed to train your subconscious mind through interactive, game-like experiences.</p>
+            </div>
+        </section>
+
+        <section id="demo" class="demo-section">
+            <h2>Experience NeuroEcho</h2>
+            <div class="demo-container">
+                <div class="demo-card">
+                    <h3>Micro-expression Detection</h3>
+                    <div class="webcam-container">
+                        <video id="video" autoplay></video>
+                    </div>
+                    <button id="start-cam" class="btn">Start Camera</button>
+                    <div class="emotion-result">
+                        <p>Emotion will be displayed here</p>
+                    </div>
+                </div>
+                <div class="demo-card">
+                    <h3>Voice Sentiment Analysis</h3>
+                    <div class="voice-container">
+                        <button id="voice-btn" class="voice-btn">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                        <p>Click to analyze your speech tone</p>
+                    </div>
+                    <div class="emotion-result">
+                        <p>Sentiment will be displayed here</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="game-container">
+            <h2>Cognitive Reframing Exercise</h2>
+            <div class="game-content">
+                <p>Try this interactive exercise to practice reframing negative thoughts:</p>
+                
+                <div class="scenario">
+                    <p id="scenario-text">Your friend didn't reply to your message. You think they're ignoring you.</p>
+                </div>
+                
+                <div class="options">
+                    <button class="option-btn" onclick="selectOption(0)">They must be mad at me</button>
+                    <button class="option-btn" onclick="selectOption(1)">They're probably busy</button>
+                    <button class="option-btn" onclick="selectOption(2)">I'll send a follow-up message</button>
+                </div>
+                
+                <div id="feedback"></div>
+                
+                <div class="progress-container">
+                    <h3>Your Progress</h3>
+                    <div class="progress-bar">
+                        <div class="progress" id="progress-bar"></div>
+                    </div>
+                    <p id="progress-text">0% Positive Responses</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-logo">NeuroEcho</div>
+            <p>Real-time subconscious cognitive training with generative AI</p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact Us</a>
+            </div>
+            <p class="copyright">© 2023 NeuroEcho by Team CAH [Ctrl + Alt + Heal]. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Micro-expression Detection (simulated)
+        const startCamBtn = document.getElementById('start-cam');
+        const emotionResult = document.querySelector('.emotion-result');
+        
+        startCamBtn.addEventListener('click', async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                const video = document.getElementById('video');
+                video.srcObject = stream;
+                
+                // Simulate emotion detection after a delay
+                setTimeout(() => {
+                    const emotions = ['Calm', 'Slightly Stressed', 'Focused', 'Neutral', 'Engaged'];
+                    const randomEmotion = emotions[Math.floor(Math.random() * emotions.length)];
+                    emotionResult.innerHTML = `<p>Detected Emotion: <strong>${randomEmotion}</strong></p>`;
+                    
+                    // Add a simple visualization
+                    emotionResult.innerHTML += `
+                        <div style="margin-top: 10px;">
+                            <div style="background: #eee; height: 10px; border-radius: 5px; overflow: hidden;">
+                                <div style="background: #4285F4; width: ${Math.random() * 70 + 30}%; height: 100%;"></div>
+                            </div>
+                        </div>
+                    `;
+                }, 2000);
+            } catch (err) {
+                emotionResult.innerHTML = `<p>Error: Could not access camera. ${err.message}</p>`;
+            }
+        });
+        
+        // Voice Sentiment Analysis (simulated)
+        const voiceBtn = document.getElementById('voice-btn');
+        const voiceResult = document.querySelectorAll('.emotion-result')[1];
+        
+        voiceBtn.addEventListener('click', () => {
+            if (voiceBtn.classList.contains('listening')) {
+                voiceBtn.classList.remove('listening');
+                voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+                
+                // Simulate sentiment analysis after "listening"
+                const sentiments = ['Positive', 'Neutral', 'Slightly Negative', 'Calm', 'Engaged'];
+                const randomSentiment = sentiments[Math.floor(Math.random() * sentiments.length)];
+                
+                voiceResult.innerHTML = `
+                    <p>Detected Sentiment: <strong>${randomSentiment}</strong></p>
+                    <div style="margin-top: 10px;">
+                        <div style="background: #eee; height: 10px; border-radius: 5px; overflow: hidden;">
+                            <div style="background: #34A853; width: ${Math.random() * 70 + 30}%; height: 100%;"></div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                voiceBtn.classList.add('listening');
+                voiceBtn.innerHTML = '<i class="fas fa-stop"></i>';
+                voiceResult.innerHTML = '<p>Listening... Speak now</p>';
+            }
+        });
+        
+        // Cognitive Exercise
+        let positiveCount = 0;
+        let totalCount = 0;
+        
+        function selectOption(optionIndex) {
+            const options = document.querySelectorAll('.option-btn');
+            const feedback = document.getElementById('feedback');
+            
+            // Remove any previous selections
+            options.forEach(opt => {
+                opt.classList.remove('selected', 'positive');
+            });
+            
+            // Mark selected option
+            options[optionIndex].classList.add('selected');
+            
+            // Provide feedback based on selection
+            if (optionIndex === 0) {
+                feedback.innerHTML = '<p style="color: #EA4335;">This thought assumes the worst. Try to consider alternative explanations.</p>';
+            } else if (optionIndex === 1) {
+                feedback.innerHTML = '<p style="color: #34A853;">Good! This is a balanced perspective that doesn\'t assume negative intent.</p>';
+                options[optionIndex].classList.add('positive');
+                positiveCount++;
+            } else {
+                feedback.innerHTML = '<p style="color: #34A853;">Excellent proactive approach without jumping to conclusions!</p>';
+                options[optionIndex].classList.add('positive');
+                positiveCount++;
+            }
+            
+            totalCount++;
+            
+            // Update progress
+            const progressPercent = Math.round((positiveCount / totalCount) * 100);
+            document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+            document.getElementById('progress-text').textContent = `${progressPercent}% Positive Responses`;
+            
+            // Change scenario after a delay
+            setTimeout(() => {
+                changeScenario();
+                feedback.innerHTML = '';
+                options.forEach(opt => {
+                    opt.classList.remove('selected', 'positive');
+                });
+            }, 3000);
+        }
+        
+        function changeScenario() {
+            const scenarios = [
+                "You made a mistake at work. You think your boss will fire you.",
+                "You're invited to a social event. You think you won't have anything interesting to say.",
+                "You tried a new hobby and weren't good at it immediately. You think you lack talent."
+            ];
+            
+            const randomScenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+            document.getElementById('scenario-text').textContent = randomScenario;
+        }
+    </script>
+</body>
+</html>
